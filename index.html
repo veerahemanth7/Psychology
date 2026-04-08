@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Effort Avoidance Scale (EAS)</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  line-height: 1.6;
+}
+
+.page { max-width: 800px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+
+/* HEADER */
+.header {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.header h1 { font-size: 24px; font-weight: 700; color: #111; margin-bottom: 6px; }
+.header .subtitle { font-size: 14px; color: #888; }
+.header .meta { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.header .meta span {
+  font-size: 12px; padding: 4px 12px;
+  background: #f5f5f5; border: 1px solid #e5e5e5;
+  border-radius: 20px; color: #666;
+}
+
+/* INSTRUCTIONS */
+.instructions {
+  background: #fff; border: 1px solid #e5e5e5;
+  border-radius: 12px; padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem; font-size: 14px; color: #555; line-height: 1.7;
+}
+
+/* LEGEND */
+.legend {
+  display: flex; justify-content: space-between;
+  background: #fff; border: 1px solid #e5e5e5;
+  border-radius: 10px; padding: 12px 20px;
+  margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px;
+}
+.legend-item { text-align: center; }
+.legend-item .lnum { font-size: 18px; font-weight: 700; color: #333; }
+.legend-item .ltxt { font-size: 11px; color: #aaa; margin-top: 2px; line-height: 1.4; }
+
+/* PROGRESS */
+.prog-wrap { margin-bottom: 2rem; }
+.prog-header { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 6px; }
+.prog-track { background: #e5e5e5; border-radius: 6px; height: 8px; overflow: hidden; }
+.prog-fill { height: 100%; background: #4f6ef7; border-radius: 6px; transition: width 0.3s; width: 0%; }
+
+/* SECTION */
+.section { margin-bottom: 2.5rem; }
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  background: #fff; border: 1px solid #e5e5e5;
+  border-radius: 10px 10px 0 0; border-bottom: none;
+}
+.sec-badge {
+  font-size: 11px; font-weight: 600; padding: 4px 12px;
+  border-radius: 20px; white-space: nowrap;
+}
+.badge-a { background: #eef1ff; color: #4f6ef7; }
+.badge-b { background: #e6faf3; color: #1a9e73; }
+.badge-c { background: #fff4e6; color: #c97b1a; }
+.badge-d { background: #fce8f3; color: #c0397a; }
+
+.sec-title { font-size: 15px; font-weight: 600; color: #111; }
+.sec-desc { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+/* TABLE */
+.items-table {
+  width: 100%; border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+}
+.items-table thead tr { background: #fafafa; border-bottom: 1px solid #eee; }
+.items-table thead th {
+  padding: 8px 10px; font-size: 12px; font-weight: 600;
+  color: #bbb; text-align: center;
+}
+.items-table thead th.q-col { text-align: left; padding-left: 16px; }
+.items-table tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.1s; }
+.items-table tbody tr:last-child { border-bottom: none; }
+.items-table tbody tr:hover { background: #fafafa; }
+.items-table td { padding: 11px 10px; font-size: 14px; vertical-align: middle; }
+.q-cell { display: flex; align-items: flex-start; gap: 8px; }
+.item-num { font-size: 12px; color: #ccc; min-width: 26px; padding-top: 1px; }
+.item-text { flex: 1; line-height: 1.5; color: #333; }
+.r-col { width: 48px; text-align: center; }
+.radio-cell { text-align: center; vertical-align: middle; }
+.radio-cell input[type=radio] {
+  width: 18px; height: 18px; cursor: pointer; accent-color: #4f6ef7;
+}
+
+/* SUBMIT */
+.submit-area { text-align: center; margin-top: 2rem; }
+.submit-btn {
+  font-size: 15px; font-weight: 600; padding: 12px 40px;
+  border-radius: 8px; border: none;
+  background: #4f6ef7; color: #fff; cursor: pointer; transition: background 0.2s;
+}
+.submit-btn:hover { background: #3a58e0; }
+.submit-btn:active { transform: scale(0.98); }
+.warn-msg { color: #e53935; font-size: 13px; margin-top: 10px; display: none; }
+
+/* RESULTS */
+.results {
+  display: none; margin-top: 2rem;
+  background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden;
+}
+.results-head {
+  padding: 1rem 1.5rem; background: #fafafa;
+  border-bottom: 1px solid #eee;
+}
+.results-head h2 { font-size: 16px; font-weight: 700; color: #111; }
+
+.score-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px; padding: 1.25rem;
+}
+.score-card {
+  background: #f9f9f9; border-radius: 10px;
+  padding: 1rem; text-align: center;
+}
+.score-card .lbl { font-size: 11px; color: #aaa; margin-bottom: 6px; line-height: 1.5; }
+.score-card .val { font-size: 28px; font-weight: 700; color: #111; }
+.score-card .mx { font-size: 11px; color: #ccc; margin-top: 3px; }
+.card-total { background: #eef1ff; }
+.card-total .val { color: #4f6ef7; }
+.card-total .lbl { color: #8899dd; }
+
+.bars-section { padding: 0 1.5rem 1.5rem; }
+.bar-row { margin-bottom: 14px; }
+.bar-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: #888; }
+.bar-meta .bpct { font-weight: 600; color: #444; }
+.bar-track { background: #f0f0f0; border-radius: 6px; height: 8px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; width: 0%; }
+.fill-a { background: #4f6ef7; }
+.fill-b { background: #1a9e73; }
+.fill-c { background: #c97b1a; }
+.fill-d { background: #c0397a; }
+
+.interp-block {
+  margin: 0 1.5rem 1.5rem;
+  background: #f9f9f9; border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+.interp-block p { font-size: 14px; color: #555; line-height: 1.7; }
+
+@media (max-width: 560px) {
+  .r-col { width: 36px; }
+  .score-grid { grid-template-columns: 1fr 1fr; }
+  .header h1 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Effort Avoidance Scale (EAS)</h1>
+    <p class="subtitle">Psychological Self-Assessment Instrument · Research Edition</p>
+    <div class="meta">
+      <span>60 items</span>
+      <span>4 sub-scales</span>
+      <span>5-point scale</span>
+      <span>Score out of 300</span>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <strong>Instructions:</strong> Read each statement and rate how well it describes you using a scale of 1 to 5. There are no right or wrong answers — please answer as honestly as possible for accurate results.
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="lnum">1</div><div class="ltxt">Strongly<br>disagree</div></div>
+    <div class="legend-item"><div class="lnum">2</div><div class="ltxt">Disagree</div></div>
+    <div class="legend-item"><div class="lnum">3</div><div class="ltxt">Neutral</div></div>
+    <div class="legend-item"><div class="lnum">4</div><div class="ltxt">Agree</div></div>
+    <div class="legend-item"><div class="lnum">5</div><div class="ltxt">Strongly<br>agree</div></div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span>Progress</span>
+      <span id="prog-label">0 of 60 answered</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-bar"></div></div>
+  </div>
+
+  <div id="sections-container"></div>
+
+  <div class="submit-area">
+    <button class="submit-btn" onclick="submitEAS()">Calculate my results</button>
+    <p class="warn-msg" id="warn-msg">Please answer all 60 questions before submitting.</p>
+  </div>
+
+  <div class="results" id="results">
+    <div class="results-head"><h2>Your results</h2></div>
+    <div class="score-grid">
+      <div class="score-card"><div class="lbl">Sub-scale A<br>Cognitive Avoidance</div><div class="val" id="sc-a">—</div><div class="mx">out of 75</div></div>
+      <div class="score-card"><div class="lbl">Sub-scale B<br>Physical Avoidance</div><div class="val" id="sc-b">—</div><div class="mx">out of 75</div></div>
+      <div class="score-card"><div class="lbl">Sub-scale C<br>Motivational Avoidance</div><div class="val" id="sc-c">—</div><div class="mx">out of 75</div></div>
+      <div class="score-card"><div class="lbl">Sub-scale D<br>Social Avoidance</div><div class="val" id="sc-d">—</div><div class="mx">out of 75</div></div>
+      <div class="score-card card-total"><div class="lbl">Total EAS score</div><div class="val" id="sc-total">—</div><div class="mx">out of 300</div></div>
+    </div>
+    <div class="bars-section">
+      <div class="bar-row"><div class="bar-meta"><span>Cognitive avoidance</span><span class="bpct" id="pct-a">0%</span></div><div class="bar-track"><div class="bar-fill fill-a" id="bar-a"></div></div></div>
+      <div class="bar-row"><div class="bar-meta"><span>Physical avoidance</span><span class="bpct" id="pct-b">0%</span></div><div class="bar-track"><div class="bar-fill fill-b" id="bar-b"></div></div></div>
+      <div class="bar-row"><div class="bar-meta"><span>Motivational avoidance</span><span class="bpct" id="pct-c">0%</span></div><div class="bar-track"><div class="bar-fill fill-c" id="bar-c"></div></div></div>
+      <div class="bar-row"><div class="bar-meta"><span>Social avoidance</span><span class="bpct" id="pct-d">0%</span></div><div class="bar-track"><div class="bar-fill fill-d" id="bar-d"></div></div></div>
+    </div>
+    <div class="interp-block"><p id="interp-text"></p></div>
+  </div>
+
+</div>
+<script>
+const sections = [
+  {
+    id:'a', badge:'Sub-Scale A', badgeClass:'badge-a',
+    title:'Cognitive Avoidance',
+    desc:'Tendency to avoid tasks requiring mental effort, concentration, or complex thinking.',
+    items:[
+      "I prefer tasks that require little mental effort.",
+      "I tend to put off activities that require a lot of thinking.",
+      "I find complex problems draining rather than stimulating.",
+      "I avoid situations where I might have to think hard.",
+      "I often choose the easiest solution, even if a better one exists.",
+      "I lose interest quickly when a task requires sustained concentration.",
+      "When given the choice, I pick mentally simpler activities.",
+      "I feel uncomfortable when asked to solve difficult problems.",
+      "I rarely push myself to think beyond what is necessary.",
+      "I prefer to let others handle tasks that require deep analysis.",
+      "I tend to stop reading or studying as soon as I find it difficult.",
+      "I avoid engaging with content that challenges my understanding.",
+      "I feel anxious when I know a task will demand a lot of brainpower.",
+      "I prefer quick, simple answers over thorough, detailed ones.",
+      "I get frustrated quickly when I do not understand something immediately."
+    ]
+  },
+  {
+    id:'b', badge:'Sub-Scale B', badgeClass:'badge-b',
+    title:'Physical Avoidance',
+    desc:'Tendency to avoid tasks requiring physical exertion, movement, or bodily effort.',
+    items:[
+      "I tend to avoid activities that require physical exertion.",
+      "I prefer resting over engaging in physically demanding tasks.",
+      "I choose the least physically tiring option whenever possible.",
+      "I frequently delay physically demanding responsibilities.",
+      "I feel reluctant to start tasks that involve a lot of movement.",
+      "I would rather take a shortcut than complete a physically demanding task.",
+      "I avoid chores or activities that require significant physical effort.",
+      "I find it hard to motivate myself to do physically tiring work.",
+      "I tend to stop physical activities as soon as I can.",
+      "I choose convenience over physical effort in most situations.",
+      "I prefer sitting or lying down to walking or standing when possible.",
+      "I avoid physical labor even when it would clearly benefit me.",
+      "I feel exhausted by the idea of physically demanding activities.",
+      "I use tools or technology to minimize any physical work required.",
+      "I tend to ask others to complete physically tiring tasks for me."
+    ]
+  },
+  {
+    id:'c', badge:'Sub-Scale C', badgeClass:'badge-c',
+    title:'Motivational Avoidance',
+    desc:'Tendency to avoid sustained goal pursuit, discipline, and long-term effort.',
+    items:[
+      "I struggle to maintain motivation when a task takes a long time.",
+      "I often give up on goals before reaching them.",
+      "I prefer immediate rewards over long-term achievements.",
+      "I find it hard to push through tasks when I feel bored.",
+      "I avoid setting ambitious goals because they require too much effort.",
+      "I often start projects enthusiastically but rarely finish them.",
+      "I lose motivation quickly when progress feels slow.",
+      "I tend to procrastinate on important tasks until the deadline.",
+      "I prefer doing nothing over working toward a distant goal.",
+      "I feel discouraged easily when I face obstacles in my goals.",
+      "I rarely follow through on plans that require sustained commitment.",
+      "I find it easier to abandon a goal than to keep working at it.",
+      "I avoid challenges that require persistence over a long period.",
+      "I tend to take breaks more often than is necessary.",
+      "I find consistent effort toward a single goal difficult to maintain."
+    ]
+  },
+  {
+    id:'d', badge:'Sub-Scale D', badgeClass:'badge-d',
+    title:'Social & Responsibility Avoidance',
+    desc:'Tendency to avoid responsibilities, obligations, and socially expected efforts.',
+    items:[
+      "I avoid taking on responsibilities whenever I can.",
+      "I tend to let others take the lead so I do not have to put in effort.",
+      "I dislike being assigned tasks that require consistent work.",
+      "I often avoid situations where I am expected to contribute significantly.",
+      "I prefer roles with low responsibility over those requiring more effort.",
+      "I feel burdened when others depend on me to complete important tasks.",
+      "I tend to avoid volunteering for tasks that demand effort.",
+      "I look for ways to reduce my workload even if it inconveniences others.",
+      "I feel relieved when someone else takes responsibility for a difficult task.",
+      "I avoid making commitments that would require sustained effort.",
+      "I find it easier to agree superficially than to engage deeply in discussions.",
+      "I avoid situations where my work will be scrutinized or evaluated.",
+      "I tend to do only the minimum required to meet expectations.",
+      "I prefer to stay in the background rather than take on a visible role.",
+      "I feel uncomfortable when I am expected to take initiative or lead."
+    ]
+  }
+];
+
+let globalQ = 0;
+
+function buildSections() {
+  const container = document.getElementById('sections-container');
+  sections.forEach(sec => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.innerHTML = `<div class="section-header">
+      <span class="sec-badge ${sec.badgeClass}">${sec.badge}</span>
+      <div><div class="sec-title">${sec.title}</div><div class="sec-desc">${sec.desc}</div></div>
+    </div>`;
+    const table = document.createElement('table');
+    table.className = 'items-table';
+    table.innerHTML = `<thead><tr>
+      <th class="q-col">Statement</th>
+      <th class="r-col">1</th><th class="r-col">2</th><th class="r-col">3</th><th class="r-col">4</th><th class="r-col">5</th>
+    </tr></thead>`;
+    const tbody = document.createElement('tbody');
+    sec.items.forEach((text, i) => {
+      globalQ++;
+      const num = globalQ;
+      const name = `q_${sec.id}_${i}`;
+      const tr = document.createElement('tr');
+      let radios = '';
+      for (let v = 1; v <= 5; v++) {
+        radios += `<td class="radio-cell r-col"><input type="radio" name="${name}" value="${v}" onchange="onAnswer()"></td>`;
+      }
+      tr.innerHTML = `<td><div class="q-cell"><span class="item-num">${num}.</span><span class="item-text">${text}</span></div></td>${radios}`;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    div.appendChild(table);
+    container.appendChild(div);
+  });
+}
+
+function onAnswer() {
+  let answered = 0;
+  sections.forEach(sec => {
+    sec.items.forEach((_, i) => {
+      if (document.querySelector(`input[name="q_${sec.id}_${i}"]:checked`)) answered++;
+    });
+  });
+  const pct = Math.round((answered / 60) * 100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = answered + ' of 60 answered';
+}
+
+function getSubScore(secId, count) {
+  let total = 0;
+  for (let i = 0; i < count; i++) {
+    const sel = document.querySelector(`input[name="q_${secId}_${i}"]:checked`);
+    if (!sel) return null;
+    total += parseInt(sel.value);
+  }
+  return total;
+}
+
+function interpret(total) {
+  const pct = Math.round((total / 300) * 100);
+  if (pct <= 25) return "Your score suggests very low effort avoidance. You consistently embrace challenges, persist under difficulty, and are comfortable with demanding tasks across all four areas. This reflects strong self-discipline and intrinsic motivation.";
+  if (pct <= 45) return "Your score suggests low to moderate effort avoidance. You handle most demands well and show good persistence. Some avoidance may appear under stress or fatigue — check your sub-scale scores to identify any specific patterns.";
+  if (pct <= 60) return "Your score suggests moderate effort avoidance. There is a noticeable tendency to choose lower-effort options in some areas. Reviewing which sub-scale scored highest can help you focus on where improvement would have the most impact.";
+  if (pct <= 75) return "Your score suggests high effort avoidance across several areas. You frequently prefer less demanding options, which may be affecting your productivity and goal achievement. Small, consistent behavioral changes can make a meaningful difference over time.";
+  return "Your score suggests very high effort avoidance. You strongly prefer low-effort paths across most situations. Exploring the underlying reasons — such as fear of failure, low self-confidence, or burnout — could be a helpful first step toward change.";
+}
+
+function submitEAS() {
+  const scores = {};
+  for (const sec of sections) {
+    const s = getSubScore(sec.id, sec.items.length);
+    if (s === null) {
+      document.getElementById('warn-msg').style.display = 'block';
+      return;
+    }
+    scores[sec.id] = s;
+  }
+  document.getElementById('warn-msg').style.display = 'none';
+  const total = scores.a + scores.b + scores.c + scores.d;
+  document.getElementById('sc-a').textContent = scores.a;
+  document.getElementById('sc-b').textContent = scores.b;
+  document.getElementById('sc-c').textContent = scores.c;
+  document.getElementById('sc-d').textContent = scores.d;
+  document.getElementById('sc-total').textContent = total;
+  ['a','b','c','d'].forEach(k => {
+    const pct = Math.round((scores[k] / 75) * 100);
+    document.getElementById('bar-' + k).style.width = pct + '%';
+    document.getElementById('pct-' + k).textContent = pct + '%';
+  });
+  document.getElementById('interp-text').textContent = interpret(total);
+  const box = document.getElementById('results');
+  box.style.display = 'block';
+  setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+buildSections();
+</script>
+</body>
+</html>
